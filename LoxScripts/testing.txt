@@ -1,0 +1,3 @@
+print "hello world";
+print 3 * 12 / 4;
+print true == false;
