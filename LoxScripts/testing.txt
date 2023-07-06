@@ -1,3 +1,5 @@
-print "hello world";
-print 3 * 12 / 4;
-print true == false;
+var a = 1;
+{
+    var a = a + 2;
+    print a;
+}
