@@ -1,6 +1,7 @@
 package lox;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static lox.TokenType.*;
@@ -34,12 +35,60 @@ public class Parser {
         }
     }
     private Stmt statement() {
+        if (match(FOR)) return forStatement();
         if (match(IF)) return ifStatement();
         if (match(PRINT)) return printStatement();
         if (match(WHILE)) return whileStatement();
         if (match(LSQUIRLY)) return new Stmt.Block(block());
 
         return expressionStatement();
+    }
+    private Stmt forStatement() {
+        consume(LPAREN, "Expect '(' after 'for' loop.");
+
+        Stmt initializer = null;
+        if (match(SEMICOLON)) {
+            initializer = null;
+        } else if (match(VAR)) {
+            initializer = varDeclaration();
+        } else {
+            initializer = expressionStatement();
+        }
+
+        Expr condition = null;
+        if (!check(SEMICOLON)) {
+            condition = expression();
+        }
+        consume(SEMICOLON, "Expect ';' after for loop condition.");
+
+        Expr increment = null;
+        if (!check(RPAREN)) {
+            increment = expression();
+        }
+        consume(RPAREN, "Expect ')' after for clauses.");
+
+        Stmt body = statement();
+
+        if (increment != null) {
+            body = new Stmt.Block(
+                    Arrays.asList(
+                            body,
+                            new Stmt.Expression(increment)
+                    )
+            );
+        }
+
+        if (condition == null) condition = new Expr.Literal(true);
+        body = new Stmt.While(condition, body);
+
+        if (initializer != null) {
+            body = new Stmt.Block(Arrays.asList(initializer, body));
+        }
+
+        // wait it's all while loop?
+        // always has been
+
+        return body;
     }
     private Stmt ifStatement() {
         consume(LPAREN, "Expect '(' after 'if'.");
