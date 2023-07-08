@@ -36,6 +36,7 @@ public class Parser {
     private Stmt statement() {
         if (match(IF)) return ifStatement();
         if (match(PRINT)) return printStatement();
+        if (match(WHILE)) return whileStatement();
         if (match(LSQUIRLY)) return new Stmt.Block(block());
 
         return expressionStatement();
@@ -57,6 +58,15 @@ public class Parser {
         Expr value = expression();
         consume(SEMICOLON, "Expect ';' after value.");
         return new Stmt.Print(value);
+    }
+    private Stmt whileStatement() {
+        consume(LPAREN, "Expect '(' after 'while' loop.");
+        Expr condition = expression();
+        consume(RPAREN, "Expect ')' after closing 'while' loop.");
+
+        Stmt body = statement();
+
+        return new Stmt.While(condition, body);
     }
     private Stmt varDeclaration() {
         Token name = consume(IDENTIFIER, "Expect variable name.");
