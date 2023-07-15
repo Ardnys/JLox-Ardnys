@@ -5,6 +5,7 @@ import java.util.List;
 abstract class Stmt {
   interface Visitor<T> {
     T visitBlockStmt(Block stmt);
+    T visitClassStmt(Class stmt);
     T visitExpressionStmt(Expression stmt);
     T visitFunctionStmt(Function stmt);
     T visitIfStmt(If stmt);
@@ -24,6 +25,20 @@ abstract class Stmt {
     }
 
     final List<Stmt> statements;
+  }
+  static class Class extends Stmt {
+    Class(Token name, List<Stmt.Function> methods) {
+      this.name = name;
+      this.methods = methods;
+    }
+
+    @Override
+    <T> T accept(Visitor<T> visitor) {
+      return visitor.visitClassStmt(this);
+    }
+
+    final Token name;
+    final List<Stmt.Function> methods;
   }
   static class Expression extends Stmt {
     Expression(Expr expression) {
