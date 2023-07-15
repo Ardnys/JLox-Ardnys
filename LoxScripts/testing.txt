@@ -2,8 +2,12 @@ class DevonshireCream {
   serveOn() {
     return "Scones";
   }
+  cream() {
+    print "cream indeed";
+  }
 }
 
 print DevonshireCream;
 var cream = DevonshireCream();
 print cream;
+cream.cream();
