@@ -41,11 +41,11 @@ public class Parser {
         consume(LSQUIRLY, "Expect '{' before class body.");
 
         List<Stmt.Function> methods = new ArrayList<>();
-        while (!check(LSQUIRLY) && !isAtEnd()) {
+        while (!check(RSQUIRLY) && !isAtEnd()) {
             methods.add(function("method"));
         }
 
-        consume(RSQUIRLY, "Expect '{' after class body.");
+        consume(RSQUIRLY, "Expect '}' after class body.");
 
         return new Stmt.Class(name, methods);
     }
