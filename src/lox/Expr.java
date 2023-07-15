@@ -12,6 +12,7 @@ abstract class Expr {
     T visitLiteralExpr(Literal expr);
     T visitLogicalExpr(Logical expr);
     T visitSetExpr(Set expr);
+    T visitThisExpr(This expr);
     T visitUnaryExpr(Unary expr);
     T visitVariableExpr(Variable expr);
   }
@@ -130,6 +131,18 @@ abstract class Expr {
     final Expr object;
     final Token name;
     final Expr value;
+  }
+  static class This extends Expr {
+    This(Token keyword) {
+      this.keyword = keyword;
+    }
+
+    @Override
+    <T> T accept(Visitor<T> visitor) {
+      return visitor.visitThisExpr(this);
+    }
+
+    final Token keyword;
   }
   static class Unary extends Expr {
     Unary(Token operator, Expr right) {
